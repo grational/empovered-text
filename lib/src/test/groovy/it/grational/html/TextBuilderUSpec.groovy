@@ -79,7 +79,7 @@ class TextBuilderUSpec extends Specification {
 		given:
 			Element tag = Mock(Element) {
 				nodeName() >> tagName
-				text() >> tagContent
+				wholeText() >> tagContent
 			}
 
 		when:
