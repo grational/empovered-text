@@ -1,0 +1,4 @@
+= empovered-text
+A library for those who cannot afford enriched text! :)
+
+This library is intended to be used to translate a text enriched with HTML tags as specified in the https://en.wikipedia.org/wiki/Enriched_text[enriched text standard] into an _empovered_ one that mocks the effects of the tags leveraging what the Unicode standard has to offer.
