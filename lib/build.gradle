@@ -10,24 +10,31 @@ plugins {
 	id 'java-library'
 	// support for groovy
 	id 'groovy'
-	// create an html index linking every report generated
-	id 'build-dashboard'
-	// view of the project (jars used, navigable source tree)
-	id 'project-report'
-	// groovy code linter
-	id 'codenarc'
 	// awesome git tag / gradle version integration
-	id 'pl.allegro.tech.build.axion-release' version '1.14.4'
+	id 'pl.allegro.tech.build.axion-release' version '1.14.+'
 	// publish on a maven-compatible repository
 	id 'maven-publish'
 }
 
 // [general] configuration
 project.ext {
-	groovyVersion = '4.0.20'
-	spockVersion = '2.3-groovy-4.0'
-	codenarcVersion = 'latest.release'
-	slf4jVersion = 'latest.release'
+	groovyVersion = '3.+'
+	spockVersion = '2.3-groovy-3.0'
+	slf4jVersion = '2.+'
+	excludedVersionPattern = '(alpha|beta)'
+}
+
+configurations.configureEach {
+	resolutionStrategy {
+		componentSelection {
+			all { ComponentSelection selection ->
+				String version = selection.candidate.version
+				if (version ==~ /.*[-_.]?${excludedVersionPattern}.*/) {
+					reject("Rejecting $version as it's an excluded version")
+				}
+			}
+		}
+	}
 }
 
 project.with {
@@ -51,7 +58,7 @@ repositories {
 
 dependencies {
 	// Groovy language support
-	api "org.apache.groovy:groovy:$groovyVersion"
+	api "org.codehaus.groovy:groovy:$groovyVersion"
 
 	// Slf4j dependencies
 	implementation (
@@ -62,52 +69,16 @@ dependencies {
 	// We use the awesome Spock testing and specification framework
 	testImplementation (
 		"org.spockframework:spock-core:$spockVersion",
-		'net.bytebuddy:byte-buddy:1.14.13',
-		'org.objenesis:objenesis:3.3'
+		'net.bytebuddy:byte-buddy:1.+',
+		'org.objenesis:objenesis:3.+'
 	)
 }
 
-// codenarc groovy source analyses
-codenarc{
-	toolVersion = "$codenarcVersion"
-
-	codenarcMain {
-		configFile = rootProject.file('conf/codenarc/ruleset.groovy')
-		exclude "**/package-info.*"
-		ignoreFailures true       // does not block builds
-		maxPriority1Violations 0
-		maxPriority2Violations 10
-		maxPriority3Violations 20
-	}
-	codenarcTest {
-		configFile = rootProject.file('conf/codenarc/ruleset-test.groovy')
-		ignoreFailures true
-		maxPriority1Violations 0
-		maxPriority2Violations 10
-		maxPriority3Violations 20
-	}
-}
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			groupId = "$group"
-			artifactId = 'povertext'
-			version = "$version"
-			from components.java
-		}
-	}
-}
 // [tasks] configuration //
-jar {
-	// execute check task when create the jar
-	dependsOn 'check'
-}
-
 release {
 	// test everything before a release
 	dependsOn 'test'
 }
-
 
 tasks.withType(Test) {
 	useJUnitPlatform()
