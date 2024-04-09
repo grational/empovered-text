@@ -17,7 +17,7 @@ plugins {
 	// groovy code linter
 	id 'codenarc'
 	// awesome git tag / gradle version integration
-	id 'pl.allegro.tech.build.axion-release' version '1.17.0'
+	id 'pl.allegro.tech.build.axion-release' version '1.14.4'
 	// publish on a maven-compatible repository
 	id 'maven-publish'
 }
@@ -36,6 +36,7 @@ project.with {
 	version scmVersion.version
 	description "A library for those who cannot afford rich text!"
 }
+
 // [crosscompile] source and target java version
 allprojects {
 	targetCompatibility = JavaVersion.VERSION_1_8
