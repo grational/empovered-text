@@ -56,6 +56,17 @@ repositories {
 	maven { url 'https://jitpack.io' }
 }
 
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = 'com.github.grational'
+			artifactId = 'empovered-text'
+			version = scmVersion.version // '0.5.0' (remove -SNAPSHOT for releases)
+			from components.java
+		}
+	}
+}
+
 dependencies {
 	// Groovy language support
 	api "org.codehaus.groovy:groovy:$groovyVersion"
