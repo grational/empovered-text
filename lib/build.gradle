@@ -17,26 +17,6 @@ plugins {
 }
 
 // [general] configuration
-project.ext {
-	groovyVersion = '3.+'
-	spockVersion = '2.3-groovy-3.0'
-	slf4jVersion = '2.+'
-	excludedVersionPattern = '(alpha|beta)'
-}
-
-configurations.configureEach {
-	resolutionStrategy {
-		componentSelection {
-			all { ComponentSelection selection ->
-				String version = selection.candidate.version
-				if (version ==~ /.*[-_.]?${excludedVersionPattern}.*/) {
-					reject("Rejecting $version as it's an excluded version")
-				}
-			}
-		}
-	}
-}
-
 project.with {
 	//project.name is set in the settings.gradle with rootProject.name
 	group 'it.grational.text'
@@ -69,20 +49,30 @@ publishing {
 
 dependencies {
 	// Groovy language support
-	api "org.codehaus.groovy:groovy:$groovyVersion"
-
-	// Slf4j dependencies
-	implementation (
-		"org.slf4j:slf4j-api:$slf4jVersion",
+	api (
+		'org.codehaus.groovy:groovy:3.+',
 		'org.jsoup:jsoup:1.+'
 	)
 
 	// We use the awesome Spock testing and specification framework
 	testImplementation (
-		"org.spockframework:spock-core:$spockVersion",
+		"org.spockframework:spock-core:2.3-groovy-3.0",
 		'net.bytebuddy:byte-buddy:1.+',
 		'org.objenesis:objenesis:3.+'
 	)
+}
+
+configurations.configureEach {
+	resolutionStrategy {
+		componentSelection {
+			all { ComponentSelection selection ->
+				String version = selection.candidate.version
+				if (version ==~ /.*[-_.]?(alpha|beta).*/) {
+					reject("Rejecting $version as it's an excluded version")
+				}
+			}
+		}
+	}
 }
 
 // [tasks] configuration //
