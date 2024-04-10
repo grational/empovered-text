@@ -82,8 +82,9 @@ class TextBuilder implements NodeVisitor {
 	@Override
 	String toString() {
 		return buffer.toString()
-			.replaceFirst(/^${ls}/,'')
-			.replaceFirst("${ls}+\$","")
+			.replaceAll("[ \t]+${ls}",ls)
+			.replaceAll("([ \t]*${ls}){3,}","${ls}${ls}")
+			.trim()
 	}
 
 }

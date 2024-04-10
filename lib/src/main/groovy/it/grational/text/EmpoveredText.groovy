@@ -10,6 +10,7 @@ import it.grational.html.FirstTag
 
 class EmpoveredText implements TextFilter {
 
+	private static final String rootTag = 'body'
 	private static final List tagsToRemove = [ 'a', 'ul' ]
 	private static final Map tags = [
 		strongEmphasisUnderline: [
@@ -32,8 +33,6 @@ class EmpoveredText implements TextFilter {
 
 	@Override
 	String filter(String input) {
-		String rootTag = 'body'
-
 		TextBuilder visitor = new TextBuilder (
 			new Strong(),
 			new Emphasis(),
