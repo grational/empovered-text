@@ -50,8 +50,8 @@ publishing {
 dependencies {
 	// Groovy language support
 	api (
-		'org.codehaus.groovy:groovy:3.+',
-		'org.jsoup:jsoup:1.+'
+		'org.codehaus.groovy:groovy:3.0.21',
+		'org.jsoup:jsoup:1.17.2'
 	)
 
 	// We use the awesome Spock testing and specification framework
