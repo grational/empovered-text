@@ -10,7 +10,7 @@ class Underline implements TextFilter { // {{{
 
 	private String extractModifier(String input) {
 		int codePoint = Character.codePointAt(input,1)
-		return Character.toString(codePoint)
+		return new String(Character.toChars(codePoint))
 	}
 
 	private String appendModifier (
