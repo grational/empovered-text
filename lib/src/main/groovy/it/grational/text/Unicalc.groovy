@@ -36,16 +36,20 @@ abstract class Unicalc implements TextFilter {
 			int codePoint = codePointAt(s,0)
 			String result
 			if ( isLowerCaseCharsButPlanckConstant(c) ) {
-				result = toString(codePoint + lowerOffset)
+				result = codePoints2String(codePoint + lowerOffset)
 			} else if ( isUpperCase(c) ) {
-				result = toString(codePoint + upperOffset)
+				result = codePoints2String(codePoint + upperOffset)
 			} else if ( isDigit(c) ) {
-				result = toString(codePoint + digitOffset)
+				result = codePoints2String(codePoint + digitOffset)
 			} else {
 				result = s
 			}
 			return result
 		}.join()
+	}
+
+	protected String codePoints2String(int cp) {
+		new String(toChars(cp))
 	}
 
 	protected boolean isLowerCaseCharsButPlanckConstant(char c) {

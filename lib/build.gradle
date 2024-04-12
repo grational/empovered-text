@@ -21,7 +21,7 @@ project.with {
 	//project.name is set in the settings.gradle with rootProject.name
 	group 'it.grational.text'
 	version scmVersion.version
-	description "A library for those who cannot afford rich text!"
+	description "A library for those who cannot afford enriched text!"
 }
 
 // [crosscompile] source and target java version
