@@ -34,10 +34,10 @@ class LaidOutText implements TextFilter {
 	@Override
 	String filter(String input) {
 		TextBuilder visitor = new TextBuilder (
-			new Strong(),
-			new Emphasis(),
-			new Underline(),
-			new StrongEmphasis(),
+			new Unchanged(),
+			new Unchanged(),
+			new Unchanged(),
+			new Unchanged(),
 			rootTag
 		)
 
