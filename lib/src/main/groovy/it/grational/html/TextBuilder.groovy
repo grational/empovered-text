@@ -36,44 +36,40 @@ class TextBuilder implements NodeVisitor {
 	@Override
 	void tail(Node tag, int depth) {
 		String name = tag.nodeName()
-		if ( name.equals("strongemu") ) {
+		if ( name.equals('strongemu') ) {
 			tag.text (
 				strongEmphasis.filter (
 					underline.filter(tag.text())
 				)
 			)
-		} else if ( name.equals("emu") ) {
+		} else if ( name.equals('emu') ) {
 			tag.text (
 				emphasis.filter (
 					underline.filter(tag.text())
 				)
 			)
-		} else if ( name.equals("strongu") ) {
+		} else if ( name.equals('strongu') ) {
 			tag.text (
-				strong.filter (
+				strong.filter(
 					underline.filter(tag.text())
 				)
 			)
-		} else if ( name.equals("strongem") ) {
+		} else if ( name.equals('strongem') ) {
 			tag.text (
 				strongEmphasis.filter(tag.text())
 			)
-		} else if ( name.equals("strong") ) {
+		} else if ( name.equals('strong') ) {
 			tag.text (
 				strong.filter(tag.text())
 			)
-		} else if ( name.equals("em") ) {
+		} else if ( name.equals('em') ) {
 			tag.text (
 				emphasis.filter(tag.text())
 			)
-		} else if ( name.equals("u") ) {
+		} else if ( name.equals('u') ) {
 			tag.text (
 				underline.filter(tag.text())
 			)
-		} else if ( name.equals("p") ) {
-			tag.text("${ls}${tag.text()}${ls}")
-		} else if ( name.equals("li") ) {
-			tag.text("${ls} • ${tag.text()}${ls}")
 		} else if ( name.equals(rootTag) ) {
 			buffer.append(tag.wholeText())
 		}
@@ -82,7 +78,9 @@ class TextBuilder implements NodeVisitor {
 	@Override
 	String toString() {
 		return buffer.toString()
-			.replaceAll("[ \t]+${ls}",ls)
+			.replaceAll(/\p{Zs}/,' ')
+			.replaceAll(/ +${ls}/,ls)
+			.replaceAll(/ {2,}/,' ')
 			.replaceAll("([ \t]*${ls}){3,}","${ls}${ls}")
 			.trim()
 	}

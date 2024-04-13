@@ -71,8 +71,6 @@ class TextBuilderUSpec extends Specification {
 			'strongu'   | 'strong underline content'          || strongUnderlineContent
 			'strongem'  | 'strong emphasis content'           || strongEmphasisContent
 			'strongemu' | 'strong emphasis underline content' || strongEmphasisUnderlineContent
-			'li'        | 'li content'                        || "${ls} • li content${ls}"
-			'p'         | 'p content'                         || "${ls}p content${ls}"
 	}
 
 	def "Should dump all the text when a root tag is encountered"() {
@@ -91,6 +89,55 @@ class TextBuilderUSpec extends Specification {
 		where:
 			tagName  | tagContent
 			'root'   | '<p><strong>strong content</strong> <em>emphasis content</em> <u>underline content</u></p>'
+	}
+
+	def "Should be able to trim and remove multiple empty lines and trailing spaces from the output"() {
+		given:
+			TextBuilder tb = new TextBuilder (
+				strongFilter,
+				emphasisFilter,
+				underlineFilter,
+				strongEmphasisFilter
+			)
+		and:
+			Element tag = Mock(Element) {
+				nodeName() >> 'root'
+				wholeText() >> '''
+				|
+				|
+				|<ul>
+				| <li>
+				|  <strong>strong   content</strong>
+				|  
+				|  
+				|  <em>emphasis  content</em>
+				|		
+				|		
+				|  <u>underline content</u>
+				| </li>
+				|</ul>
+				|
+				|
+				|
+				|'''.stripMargin()
+			}
+		and:
+			String expected = '''\
+			|<ul>
+			| <li>
+			| <strong>strong content</strong>
+			|
+			| <em>emphasis content</em>
+			|
+			| <u>underline content</u>
+			| </li>
+			|</ul>'''.stripMargin()
+
+		when:
+			tb.tail(tag, 0)
+
+		then:
+			tb.toString() == expected
 	}
 
 }
