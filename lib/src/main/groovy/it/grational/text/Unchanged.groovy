@@ -1,6 +1,6 @@
 package it.grational.text
 
-class Unchanged extends Unicalc {
+class Unchanged implements TextFilter {
 	@Override
 	String filter(String input) {
 		return input
