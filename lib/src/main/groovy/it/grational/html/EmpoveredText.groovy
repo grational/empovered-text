@@ -4,6 +4,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.NodeTraversor
 import it.grational.text.TextFilter
+import it.grational.text.RemoveTrailingSpaces
+import it.grational.text.CompactInternalSpaces
+import it.grational.text.CompactEmptyLines
 
 class EmpoveredText implements TextFilter {
 
@@ -46,11 +49,13 @@ class EmpoveredText implements TextFilter {
 			doc
 		)
 
-		return doc.wholeText()
-			.trim() // remove leading and trailing spaces for the entire block
-			.replaceAll(/\p{Zs}+${ls}/,ls) // remove line trailing spaces
-			.replaceAll(/(\p{Zs})\p{Zs}+/,'$1') // compact more spaces into one
-			.replaceAll(/(\p{Zs}*${ls}){3,}/,"${ls}${ls}") // compact 3+ newlines into 2
+		return new CompactInternalSpaces (
+			new CompactEmptyLines (
+				new RemoveTrailingSpaces()
+			)
+		).filter (
+			doc.wholeText().trim()
+		)
 	}
 
 }
