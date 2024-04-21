@@ -1,4 +1,4 @@
-package it.grational.html
+package it.grational.text
 /*
  *                       _oo0oo_
  *                      o8888888o
@@ -29,7 +29,7 @@ import static support.TestSet.*
 
 class EmpoveredTextUSpec extends Specification {
 
-	@Shared EmpoveredText sieve = new EmpoveredText()
+	@Shared TextFilter.EmpoveredText sieve = new TextFilter.EmpoveredText()
 
 	def "Shoul leave regular text as is"() {
 		given:

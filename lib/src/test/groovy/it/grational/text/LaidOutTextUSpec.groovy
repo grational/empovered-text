@@ -1,4 +1,4 @@
-package it.grational.html
+package it.grational.text
 /*
  *                       _oo0oo_
  *                      o8888888o
@@ -27,7 +27,7 @@ import spock.lang.*
 
 class LaidOutTextUSpec extends Specification {
 
-	@Shared LaidOutText sieve = new LaidOutText()
+	@Shared TextFilter.LaidOutText sieve = new TextFilter.LaidOutText()
 
 	def "Shoul leave regular text as is"() {
 		given:
