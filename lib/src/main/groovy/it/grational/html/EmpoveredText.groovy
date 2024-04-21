@@ -1,23 +1,21 @@
-package it.grational.text
+package it.grational.html
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.NodeTraversor
-import it.grational.html.TextBuilder
-import it.grational.html.TagsSurround
-import it.grational.html.NoConversion
+import it.grational.text.TextFilter
 
-class LaidOutText implements TextFilter {
+class EmpoveredText implements TextFilter {
 
 	private static final String ls = System.lineSeparator()
 	private static final Map tags = [
 		paragraph: [
-			query: 'p',
+			name: 'p',
 			surround: ls
 		],
 		list: [
-			query: 'li',
-			prefix: "${ls} * ",
+			name: 'li',
+			prefix: "${ls} • ",
 			postfix: ls
 		]
 	]
@@ -25,23 +23,27 @@ class LaidOutText implements TextFilter {
 	@Override
 	String filter(String input) {
 		TextBuilder visitor = new TextBuilder (
-			new NoConversion()
+			new TagSurround (
+				tags.list.name,
+				tags.list.prefix,
+				tags.list.postfix,
+				new TagSurround (
+					tags.paragraph.name,
+					tags.paragraph.surround,
+					new Strong (
+						new Emphasis (
+							new Underline()
+						)
+					)
+				)
+			)
 		)
 
 		Document doc = Jsoup.parse(input)
 
 		NodeTraversor.traverse (
 			visitor,
-				new TagsSurround (
-					new TagsSurround (
-						doc,
-						tags.paragraph.query,
-						tags.paragraph.surround
-					),
-					tags.list.query,
-					tags.list.prefix,
-					tags.list.postfix
-			).filter()
+			doc
 		)
 
 		return doc.wholeText()
@@ -50,4 +52,5 @@ class LaidOutText implements TextFilter {
 			.replaceAll(/(\p{Zs})\p{Zs}+/,'$1') // compact more spaces into one
 			.replaceAll(/(\p{Zs}*${ls}){3,}/,"${ls}${ls}") // compact 3+ newlines into 2
 	}
+
 }

@@ -26,4 +26,7 @@ class TestSet {
 		Normalizer.normalize(input, Normalizer.Form.NFD)
 	}	
 
+	static List toCodePoints(String input) {
+		input.codePoints().collect()
+	}
 }
