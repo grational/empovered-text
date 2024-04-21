@@ -2,49 +2,86 @@ package it.grational.html
 
 import spock.lang.*
 import org.jsoup.nodes.Element
-import it.grational.text.TextFilter
+import it.grational.html.TagConverter
 
+// https://en.wikipedia.org/wiki/Mathematical_Alphanumeric_Symbols
 class TextBuilderUSpec extends Specification {
 
 	@Shared String ls = System.lineSeparator()
-	@Shared String strongContent = '𝐬𝐭𝐫𝐨𝐧𝐠 𝐜𝐨𝐧𝐭𝐞𝐧𝐭'
-	@Shared String emphasisContent = '𝑒𝑚𝑝ℎ𝑎𝑠𝑖𝑠 𝑐𝑜𝑛𝑡𝑒𝑛𝑡'
-	@Shared String underlineContent = 'u̲n̲d̲e̲r̲l̲i̲n̲e̲ ̲c̲o̲n̲t̲e̲n̲t̲'
-	@Shared String emphasisUnderlineContent = '𝑒̲𝑚̲𝑝̲̲ℎ̲𝑎̲𝑠̲𝑖̲𝑠̲ ̲𝑢̲𝑛̲𝑑̲𝑒̲𝑟̲𝑙̲𝑖̲𝑛̲𝑒̲ ̲𝑐̲𝑜̲𝑛̲𝑡̲𝑒̲𝑛̲𝑡̲'
-	@Shared String strongUnderlineContent = '𝐬̲𝐭̲𝐫̲𝐨̲𝐧̲𝐠̲ ̲𝐮̲𝐧̲𝐝̲𝐞̲𝐫̲𝐥̲𝐢̲𝐧̲𝐞̲ ̲𝐜̲𝐨̲𝐧̲𝐭̲𝐞̲𝐧̲𝐭̲'
-	@Shared String strongEmphasisContent = '𝒔𝒕𝒓𝒐𝒏𝒈 𝒆𝒎𝒑𝒉𝒂𝒔𝒊𝒔 𝒄𝒐𝒏𝒕𝒆𝒏𝒕'
-	@Shared String strongEmphasisUnderlineContent = '𝒔̲𝒕̲𝒓̲𝒐̲𝒏̲𝒈̲ ̲𝒆̲𝒎̲𝒑̲𝒉̲𝒂̲𝒔̲𝒊̲𝒔̲ ̲𝒖̲𝒏̲𝒅̲𝒆̲𝒓̲𝒍̲𝒊̲𝒏̲𝒆̲ ̲𝒄̲𝒐̲𝒏̲𝒕̲𝒆̲𝒏̲𝒕̲'
+	@Shared String strongTag = 'strong'
+	@Shared String emphasisTag = 'em'
+	@Shared String underlineTag = 'u'
+	@Shared String defaultRootTag = 'body'
 
-	@Shared TextFilter strongFilter
-	@Shared TextFilter emphasisFilter
-	@Shared TextFilter underlineFilter
-	@Shared TextFilter strongEmphasisFilter
+	@Shared String content = 'content'
+	@Shared String underlineContent = 'c̲o̲n̲t̲e̲n̲t̲'
+	@Shared String emphasisContent = '𝑐𝑜𝑛𝑡𝑒𝑛𝑡'
+	@Shared String emphasisUnderlineContent = '𝑐̲𝑜̲𝑛̲𝑡̲𝑒̲𝑛̲𝑡̲'
+	@Shared String strongContent = '𝐜𝐨𝐧𝐭𝐞𝐧𝐭'
+	@Shared String strongEmphasisContent = '𝒄𝒐𝒏𝒕𝒆𝒏𝒕'
+	@Shared String strongUnderlineContent = '𝐜̲𝐨̲𝐧̲𝐭̲𝐞̲𝐧̲𝐭̲'
+	@Shared String strongEmphasisUnderlineContent = '𝒄̲𝒐̲𝒏̲𝒕̲𝒆̲𝒏̲𝒕̲'
+
+	@Shared TagConverter tagConvertersChain
 
 	@Shared TextBuilder textBuilder
 
 	def setupSpec() {
-		strongFilter = Stub() {
-			filter(emphasisContent) >> strongEmphasisContent
-			filter(underlineContent) >> strongUnderlineContent
-			filter(_) >> strongContent
-		}
-		emphasisFilter = Stub() {
-			filter(underlineContent) >> emphasisUnderlineContent
-			filter(_) >> emphasisContent
-		}
-		underlineFilter = Stub() {
-			filter(_) >> underlineContent
-		}
-		strongEmphasisFilter = Stub() {
-			filter(underlineContent) >> strongEmphasisUnderlineContent
-			filter(_) >> strongEmphasisContent
+		tagConvertersChain = Stub() {
+			convert(_ as Element) >> { Element tag ->
+				
+				String result
+				if ( tag.nodeName() == strongTag ) {
+					switch(tag.text()) {
+						case content:
+							result = strongContent; break
+						case underlineContent:
+							result = strongUnderlineContent; break
+						case emphasisContent:
+							result = strongEmphasisContent; break
+						case emphasisUnderlineContent:
+							result = strongEmphasisUnderlineContent; break
+						default:
+							result = tag.text()
+					}
+				}
+
+				if ( tag.nodeName() == emphasisTag ) {
+					switch(tag.text()) {
+						case content:
+							result = emphasisContent; break
+						case underlineContent:
+							result = emphasisUnderlineContent; break
+						case strongContent:
+							result = strongEmphasisContent; break
+						case strongUnderlineContent:
+							result = strongEmphasisUnderlineContent; break
+						default:
+							result = tag.text()
+					}
+				}
+
+				if ( tag.nodeName() == underlineTag ) {
+					switch(tag.text()) {
+						case content:
+							result = underlineContent; break
+						case emphasisContent:
+							result = emphasisUnderlineContent; break
+						case strongContent:
+							result = strongUnderlineContent; break
+						case strongEmphasisContent:
+							result = strongEmphasisUnderlineContent; break
+						default:
+							result = tag.text()
+					}
+				}
+
+				if ( result ) tag.text(result)
+			}
 		}
 
 		textBuilder = new TextBuilder (
-			strongFilter,
-			emphasisFilter,
-			underlineFilter,
-			strongEmphasisFilter
+			tagConvertersChain
 		)
 	}
 
@@ -63,16 +100,32 @@ class TextBuilderUSpec extends Specification {
 			1 * tag.text(expected)
 
 		where:
-			tagName     | tagContent                          || expected
-			'strong'    | 'strong content'                    || strongContent
-			'em'        | 'emphasis content'                  || emphasisContent
-			'u'         | 'underline content'                 || underlineContent
-			'emu'       | 'emphasis underline content'        || emphasisUnderlineContent
-			'strongu'   | 'strong underline content'          || strongUnderlineContent
-			'strongem'  | 'strong emphasis content'           || strongEmphasisContent
-			'strongemu' | 'strong emphasis underline content' || strongEmphasisUnderlineContent
+			tagName      | tagContent               || expected
+			strongTag    | content                  || strongContent
+			strongTag    | strongContent            || strongContent
+			strongTag    | emphasisContent          || strongEmphasisContent
+			strongTag    | underlineContent         || strongUnderlineContent
+			strongTag    | strongEmphasisContent    || strongEmphasisContent
+			strongTag    | strongUnderlineContent   || strongUnderlineContent
+			strongTag    | emphasisUnderlineContent || strongEmphasisUnderlineContent
+			emphasisTag  | content                  || emphasisContent
+			emphasisTag  | strongContent            || strongEmphasisContent
+			emphasisTag  | emphasisContent          || emphasisContent
+			emphasisTag  | underlineContent         || emphasisUnderlineContent
+			emphasisTag  | strongEmphasisContent    || strongEmphasisContent
+			emphasisTag  | strongUnderlineContent   || strongEmphasisUnderlineContent
+			emphasisTag  | emphasisUnderlineContent || emphasisUnderlineContent
+			underlineTag | content                  || underlineContent
+			underlineTag | strongContent            || strongUnderlineContent
+			underlineTag | emphasisContent          || emphasisUnderlineContent
+			underlineTag | underlineContent         || underlineContent
+			underlineTag | strongEmphasisContent    || strongEmphasisUnderlineContent
+			underlineTag | strongUnderlineContent   || strongUnderlineContent
+			underlineTag | emphasisUnderlineContent || emphasisUnderlineContent
 	}
 
+	// TODO it has to be moved into specific decorator classes
+	@Ignore
 	def "Should dump all the text when a root tag is encountered"() {
 		given:
 			Element tag = Mock(Element) {
@@ -88,20 +141,18 @@ class TextBuilderUSpec extends Specification {
 
 		where:
 			tagName  | tagContent
-			'root'   | '<p><strong>strong content</strong> <em>emphasis content</em> <u>underline content</u></p>'
+			defaultRootTag   | '<p><strong>strong content</strong> <em>emphasis content</em> <u>underline content</u></p>'
 	}
 
+	@Ignore
 	def "Should be able to trim and remove multiple empty lines and trailing spaces from the output"() {
 		given:
 			TextBuilder tb = new TextBuilder (
-				strongFilter,
-				emphasisFilter,
-				underlineFilter,
-				strongEmphasisFilter
+				tagConvertersChain
 			)
 		and:
 			Element tag = Mock(Element) {
-				nodeName() >> 'root'
+				nodeName() >> defaultRootTag
 				wholeText() >> '''
 				|
 				|

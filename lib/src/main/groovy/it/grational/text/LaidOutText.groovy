@@ -5,20 +5,11 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.NodeTraversor
 import it.grational.html.TextBuilder
 import it.grational.html.TagsSurround
-import it.grational.html.RemoveTags
-import it.grational.html.FirstTag
+import it.grational.html.NoConversion
 
 class LaidOutText implements TextFilter {
 
 	private static final String ls = System.lineSeparator()
-	private static final String rootTag = 'body'
-	private static final List tagsToRemove = [
-		'strong',
-		'em',
-		'u',
-		'a',
-		'ul'
-	]
 	private static final Map tags = [
 		paragraph: [
 			query: 'p',
@@ -26,7 +17,7 @@ class LaidOutText implements TextFilter {
 		],
 		list: [
 			query: 'li',
-			prefix: "${ls} * ",
+			prefix: "${ls} * ",
 			postfix: ls
 		]
 	]
@@ -34,33 +25,29 @@ class LaidOutText implements TextFilter {
 	@Override
 	String filter(String input) {
 		TextBuilder visitor = new TextBuilder (
-			new Unchanged(),
-			new Unchanged(),
-			new Unchanged(),
-			new Unchanged(),
-			rootTag
+			new NoConversion()
 		)
+
+		Document doc = Jsoup.parse(input)
 
 		NodeTraversor.traverse (
 			visitor,
-			new FirstTag (
 				new TagsSurround (
 					new TagsSurround (
-						new RemoveTags (
-							Jsoup.parse(input),
-							tagsToRemove,
-						),
+						doc,
 						tags.paragraph.query,
 						tags.paragraph.surround
 					),
 					tags.list.query,
 					tags.list.prefix,
 					tags.list.postfix
-				),
-				rootTag
 			).filter()
 		)
 
-		return visitor.toString()
+		return doc.wholeText()
+			.trim() // remove leading and trailing spaces for the entire block
+			.replaceAll(/\p{Zs}+${ls}/,ls) // remove line trailing spaces
+			.replaceAll(/(\p{Zs})\p{Zs}+/,'$1') // compact more spaces into one
+			.replaceAll(/(\p{Zs}*${ls}){3,}/,"${ls}${ls}") // compact 3+ newlines into 2
 	}
 }

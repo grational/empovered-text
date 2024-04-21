@@ -59,13 +59,13 @@ class LaidOutTextUSpec extends Specification {
 			String expected = """\
 			|Informazioni Azienda ENZA BUTTIGLIERI S.A.S. DI VINCENZA BUTTIGLIERI E C.
 			|
-			|L'azienda ENZA BUTTIGLIERI S.A.S. DI VINCENZA BUTTIGLIERI E C., con partita IVA 01639160090 e codice fiscale italico 01639160090, ha come attività prevalente Servizi dei saloni di barbiere e parrucchiere ed è registrata con il codice Ateco prevalente: 96.02.01. L'ultimo fatturato disponibile è del [anno] ed è di {fatturato}. La sua forma giuridica è Società in accomandita semplice e la sua sede legale si trova in VIA NIELLA 29 R - 17100 SAVONA, in provincia di SV.
+			|L'azienda ENZA BUTTIGLIERI S.A.S. DI VINCENZA BUTTIGLIERI E C., con partita IVA 01639160090 e codice fiscale italico 01639160090, ha come attività prevalente Servizi dei saloni di barbiere e parrucchiere ed è registrata con il codice Ateco prevalente: 96.02.01. L'ultimo fatturato disponibile è del [anno] ed è di {fatturato}. La sua forma giuridica è Società in accomandita semplice e la sua sede legale si trova in VIA NIELLA 29 R - 17100 SAVONA, in provincia di SV.
 			|
-			|ENZA BUTTIGLIERI S.A.S. DI VINCENZA BUTTIGLIERI E C. ha raggiunto un fatturato nel 2021 di € 0 e nel 2022 di € 0 con una differenza di € 0,00
+			|ENZA BUTTIGLIERI S.A.S. DI VINCENZA BUTTIGLIERI E C. ha raggiunto un fatturato nel 2021 di € 0 e nel 2022 di € 0 con una differenza di € 0,00
 			|
-			| * La visura camerale per verificare soci, cariche e qualifiche;
+			| * La visura camerale per verificare soci, cariche e qualifiche;
 			|
-			| * La visura storica, con cui ottenere tutte le modifiche che sono avvenute nel tempo;""".stripMargin()
+			| * La visura storica, con cui ottenere tutte le modifiche che sono avvenute nel tempo;""".stripMargin()
 
 		when:
 			String output = sieve.filter(input)
