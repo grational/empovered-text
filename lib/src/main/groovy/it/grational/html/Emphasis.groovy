@@ -14,7 +14,7 @@ class Emphasis extends GeneralTagConverter {
 	protected TagConverter origin() { this.origin }
 
 	@Override
-	protected String tagName() { 'em' }
+	protected List<String> tagNames() { [ 'em', 'italic', 'i' ] }
 
 	@Override
 	protected String convert(String input) {

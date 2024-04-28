@@ -21,7 +21,7 @@ class Underline extends GeneralTagConverter { // {{{
 	protected TagConverter origin() { this.origin }
 
 	@Override
-	protected String tagName() { 'u' }
+	protected List<String> tagNames() { [ 'u', 'ins' ] }
 
 	@Override
 	String convert(String input) {

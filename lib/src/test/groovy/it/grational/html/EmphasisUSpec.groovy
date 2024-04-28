@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element
 
 class EmphasisUSpec extends Specification {
 
-	@Shared tagName = 'em'
+	@Shared List<String> tagNames = [ 'em', 'italic', 'i' ]
 
 	def "Should transform a regular text into an italic one"() {
 		given:
@@ -20,6 +20,9 @@ class EmphasisUSpec extends Specification {
 
 		then:
 			1 * tag.text(allItalic)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform a bold text into a bold italic one"() {
@@ -34,6 +37,9 @@ class EmphasisUSpec extends Specification {
 
 		then:
 			1 * tag.text(allBoldItalic)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform a regular text with underscore into an italic one"() {
@@ -50,6 +56,9 @@ class EmphasisUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform a bold text with underscore into its italic equivalent"() {
@@ -66,6 +75,9 @@ class EmphasisUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave an italic text as is"() {
@@ -80,6 +92,9 @@ class EmphasisUSpec extends Specification {
 
 		then:
 			1 * tag.text(allItalic)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave an italic text underlined as is"() {
@@ -96,6 +111,9 @@ class EmphasisUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave a bold italic text with underscore as is"() {
@@ -112,12 +130,15 @@ class EmphasisUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should avoid to transform text if the tag is not its own"() {
 		given:
 			Element tag = Mock(Element) {
-				nodeName() >> 'notEm'
+				nodeName() >> 'unrecognized'
 				text() >> allRegular
 			}
 

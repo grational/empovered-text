@@ -14,7 +14,7 @@ class Strong extends GeneralTagConverter {
 	protected TagConverter origin() { this.origin }
 
 	@Override
-	protected String tagName() { 'strong' }
+	protected List<String> tagNames() { [ 'strong', 'bold', 'b' ] }
 
 	@Override
 	protected String convert(String input) {

@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element
 
 class StrongUSpec extends Specification {
 
-	@Shared String tagName = 'strong'
+	@Shared List<String> tagNames = [ 'strong', 'bold', 'b' ]
 
 	def "Should transform a regular unicode text into a bold one"() {
 		given:
@@ -20,6 +20,9 @@ class StrongUSpec extends Specification {
 
 		then:
 			1 * tag.text(allBold)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform an emphasis unicode text into a bold italic one"() {
@@ -34,6 +37,9 @@ class StrongUSpec extends Specification {
 
 		then:
 			1 * tag.text(allBoldItalic)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform a regular text with underscore into a bold one"() {
@@ -50,6 +56,9 @@ class StrongUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should transform an italic text with underscore into a bold italic one with underscore"() {
@@ -66,6 +75,9 @@ class StrongUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave a bold text as is"() {
@@ -80,6 +92,9 @@ class StrongUSpec extends Specification {
 
 		then:
 			1 * tag.text(allBold)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave a bold text with underscore as is"() {
@@ -96,6 +111,9 @@ class StrongUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should leave a bold italic text with underscore as is"() {
@@ -112,12 +130,15 @@ class StrongUSpec extends Specification {
 			1 * tag.text (
 				normalizeCombiningChars(allBoldItalicUnderline)
 			)
+
+		where:
+			tagName << tagNames
 	}
 
 	def "Should avoid to transform text if the tag is not its own"() {
 		given:
 			Element tag = Mock(Element) {
-				nodeName() >> 'notStrong'
+				nodeName() >> 'unrecognized'
 				text() >> allRegular
 			}
 
